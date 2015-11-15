@@ -30,19 +30,13 @@ fi
 
 
 bundle exec puppet master \
-  --modulepath=$PUPPETDIR/modules/public:$PUPPETDIR/modules/site \
-  --manifestdir $PUPPETDIR/manifests \
-  --yamldir $ETCDIR/var/yaml \
-  --confdir $ETCDIR/etc \
-  --vardir $ETCDIR/var \
-  --storeconfigs true \
+  --confdir /etc/puppet \
   --masterlog $CATALOG_DIR/master.log \
-  --thin_storeconfigs true \
   --pluginsync true $COMPILE_OPTIONS\
   --trace \
   --color false \
   --compile $2 > $OUTPUT_FILE
 
-grep -E '^(.*0;36m)?notice: Compiled catalog for ' $OUTPUT_FILE | head -n 1 | sed 's/.*in \(.*\) seconds.*/\1/' > $TIME_FILE
+grep -E '^(.*0;36m)?[Nn]otice: Compiled catalog for ' $OUTPUT_FILE | head -n 1 | sed 's/.*in \(.*\) seconds.*/\1/' > $TIME_FILE
 grep -E '^(.*0;33m)?warning:' $OUTPUT_FILE > $WARNINGS_FILE
-grep -vE '^(.*0;33m)?(notice|warning):' $OUTPUT_FILE > $CATALOG_FILE
+grep -vE '^(.*0;33m)?([Nn]otice|warning):' $OUTPUT_FILE > $CATALOG_FILE
